@@ -1,6 +1,6 @@
 UPenn Masterclass: Spatial Data Visualization with R
 ================
-<span style="font-size:20px">James Cheshire, University College London</span><br><br><span style="font-size:14px">[Spatial.ly](http://spatial.ly/)<br>[Master of Urban Spatial Analytics - University of Pennsylvania](https://www.design.upenn.edu/musa/about)</span>
+<span style="font-size:20px">James Cheshire (@spatialanalysis), University College London</span><br><br><span style="font-size:14px">[Spatial.ly](http://spatial.ly/)<br>[Master of Urban Spatial Analytics - University of Pennsylvania](https://www.design.upenn.edu/musa/about)</span>
 
 Introduction
 ============
@@ -48,6 +48,7 @@ If you look at the `head` of the file, you'll see there's a good number of colum
 ``` r
 head(accident_in)
 ```
+
 | alignment          | beat_of_occurrence |         crash_date  | crash_date_est_i | crash_day_of_week | crash_hour | crash_month | crash_type             | damage        | date_police_notified | device_condition     | dooring_i | first_crash_type         | hit_and_run_i | injuries_fatal | injuries_incapacitating | injuries_no_indication | injuries_non_incapacitating | injuries_reported_not_evident | injuries_total | injuries_unknown | intersection_related_i | lane_cnt | latitude | lighting_condition     | location                                 | longitude | most_severe_injury      | num_units photos_taken_i | posted_speed_limit | prim_contributory_cause       |
 | ------------------ | ------------------ | ------------------- | ---------------- |------------------ | ---------- | ----------- |----------------------- | ------------- | -------------------- | -------------------- | --------- | ------------------------ | ------------- | -------------- | ----------------------- | ---------------------- | --------------------------- | ----------------------------- | -------------- | ---------------- | ---------------------- | -------- | -------- | ---------------------- | ---------------------------------------- | --------- | ----------------------- | ------------------------ | ------------------ | ----------------------------- |
 | STRAIGHT AND LEVEL |              1033  | 2016-04-16 05:49:00 | 1                | 7                 | 5          | 4           | NO INJURY / DRIVE AWAY |  OVER $1,500   | 2016-04-16 06:30:00  | FUNCTIONING PROPERLY | <NA>      | SIDESWIPE SAME DIRECTION | Y             | 0              | 0                       | 2                      | 0                           | 0                             | 0              | 0                |        Y               | 0        | 41.84473 | DAWN                   | POINT (-87.695363066709 41.844733938666) | -87.69536 | NO INDICATION OF INJURY | 2                        |  30                 | IMPROPER LANE USAGE           |
@@ -56,6 +57,7 @@ head(accident_in)
 | STRAIGHT AND LEVEL |              1833  | 2017-08-11 21:00:00 | 4                | 6                 | 21         | 8           | NO INJURY / DRIVE AWAY |  OVER $1,500   | 2017-08-11 22:30:00  | FUNCTIONING PROPERLY | <NA>      | SIDESWIPE SAME DIRECTION |               | 0              | 0                       | 3                      | 0                           | 0                             | 0              | 0                |                        | 3        | 41.89683 | DARKNESS, LIGHTED ROAD | POINT (-87.616504038799 41.896826606292) | -87.61650 | NO INDICATION OF INJURY | 2                        | 35                 | IMPROPER LANE USAGE           |
 | STRAIGHT AND LEVEL |              1414  | 2017-04-03 15:15:00 | 5                | 2                 | 15         | 4           | NO INJURY / DRIVE AWAY | $500 OR LESS  | 2017-04-03 18:56:00  | FUNCTIONING PROPERLY | <NA>      | TURNING                  | Y             | 0              | 0                       | 2                      | 0                           | 0                             | 0              | 0                |                        | 2        | 41.92448 | DAYLIGHT               | POINT (-87.702458188777 41.92448184107)  | -87.70246 | NO INDICATION OF INJURY | 2                        | 30                 | UNABLE TO DETERMINE           |
 | CURVE, LEVEL       |              1824  | 2017-05-08 15:45:00 | 6                | 2                 | 15         | 5           | NO INJURY / DRIVE AWAY | OVER $1,500   | 2017-05-08 16:22:00  | NO CONTROLS          | NA>       | REAR END                 |               | 0              | 0                       | 3                      | 0                           | 0                             | 0              | 0                |                        | 8        | 41.90075 | DAYLIGHT               | POINT (-87.62423499978 41.900752974042)  | -87.62423 | NO INDICATION OF INJURY | 2                        | 40                 | FOLLOWING TOO CLOSELY         |
+
 
 I thought we could select a particular cause from the data - to see the full list of possible causes type the following:
 
@@ -187,7 +189,20 @@ st_crs(bad_drive_sf)
 Exploratory plots with ggplot2
 ==============================
 
-We now start to explore different approaches to plotting the data using `ggplot2`.
+We now start to explore different approaches to plotting the data using `ggplot2`. The real power of the package comes from its ability to quickly create different graphical outputs from minimal tweaks to the code. For example we can pipe in our coordinates data to produce a simple point map:
+
+``` r
+bad_drive_sf %>%
+  st_coordinates %>%
+  data.frame %>%
+  ggplot(aes(X,Y)) +
+  geom_point() +
+  mapTheme()
+```
+
+<img src="UPenn_Masterclass_files/figure-markdown_github/unnamed-chunk-9-1.png" style="display: block; margin: auto;" />
+
+Then add the `geom_hex` syntax to create a hexagonal binning map. This can be tweaked with the `bins=` parameter to adjust the bin size.
 
 ``` r
 bad_drive_sf %>%
@@ -199,7 +214,9 @@ bad_drive_sf %>%
   mapTheme()
 ```
 
-<img src="UPenn_Masterclass_files/figure-markdown_github/unnamed-chunk-9-1.png" style="display: block; margin: auto;" />
+<img src="UPenn_Masterclass_files/figure-markdown_github/unnamed-chunk-10-1.png" style="display: block; margin: auto;" />
+
+Or it's possible to create a point density map with the `geom_density_2d` syntax.
 
 ``` r
 bad_drive_sf %>%
@@ -211,7 +228,9 @@ bad_drive_sf %>%
   mapTheme()
 ```
 
-<img src="UPenn_Masterclass_files/figure-markdown_github/unnamed-chunk-9-2.png" style="display: block; margin: auto;" />
+<img src="UPenn_Masterclass_files/figure-markdown_github/unnamed-chunk-11-1.png" style="display: block; margin: auto;" />
+
+What's more we can group the piped steps together into a single object and then add extra geoms - this can make things easier if we are tweaking complex plots.
 
 ``` r
 #Its also possible to group the piped steps together into a single object
@@ -227,9 +246,9 @@ Density <- bad_drive_sf %>%
 Density + geom_point(size=0.5, color="grey")
 ```
 
-<img src="UPenn_Masterclass_files/figure-markdown_github/unnamed-chunk-10-1.png" style="display: block; margin: auto;" />
+<img src="UPenn_Masterclass_files/figure-markdown_github/unnamed-chunk-12-1.png" style="display: block; margin: auto;" />
 
-If we break the ggplot code down a little further it is possible to layer the plots using different data sources.
+The plots created so far are all using the source object for their data. If we break the ggplot code down a little further it is possible to layer the plots using different data sources with the `data=` parameter within each geom.
 
 ``` r
 Bad_drive_pts<- bad_drive_sf %>% st_coordinates %>% data.frame
@@ -241,7 +260,9 @@ ggplot() +
   mapTheme()
 ```
 
-<img src="UPenn_Masterclass_files/figure-markdown_github/unnamed-chunk-11-1.png" style="display: block; margin: auto;" />
+<img src="UPenn_Masterclass_files/figure-markdown_github/unnamed-chunk-13-1.png" style="display: block; margin: auto;" />
+
+This is a particulary useful feature for maps since these usually comprise a series of basemap layers with the data overlain on top. In Chicago's case bodies of water are really important.
 
 ``` r
 Water<- read_sf("Water_Clip.shp") #adapted from https://data.cityofchicago.org/Parks-Recreation/Waterways/eg9f-z3t6
@@ -259,7 +280,7 @@ ggplot() +
   mapTheme()
 ```
 
-<img src="UPenn_Masterclass_files/figure-markdown_github/unnamed-chunk-12-1.png" style="display: block; margin: auto;" />
+<img src="UPenn_Masterclass_files/figure-markdown_github/unnamed-chunk-14-1.png" style="display: block; margin: auto;" />
 
 Hopefully the preceding steps give a good indication of how spatial data can be layered using ggplot. The final part of this worksheet looks at how we can add an extra analytical step to produce a more informative map. In this case we are going to assign the accidents to the nodes in the road network to show the stretches of road that have the most accidents along them.
 
@@ -319,7 +340,7 @@ ggplot(final, aes(X,Y,group=ID, order=Seg,size=Sum)) +
   mapTheme()
 ```
 
-<img src="UPenn_Masterclass_files/figure-markdown_github/unnamed-chunk-16-1.png" style="display: block; margin: auto;" />
+<img src="UPenn_Masterclass_files/figure-markdown_github/unnamed-chunk-18-1.png" style="display: block; margin: auto;" />
 
 We can now revisit some of the code created earlier to recreate a plot with these scaled roads instead of points.
 
@@ -333,7 +354,7 @@ ggplot() +
   mapTheme()
 ```
 
-<img src="UPenn_Masterclass_files/figure-markdown_github/unnamed-chunk-17-1.png" style="display: block; margin: auto;" />
+<img src="UPenn_Masterclass_files/figure-markdown_github/unnamed-chunk-19-1.png" style="display: block; margin: auto;" />
 
 It isn't the most visually appealing map, but it has the raw materials we need to create something a little more compelling.
 
@@ -355,7 +376,7 @@ ggplot() +
   mapTheme()
 ```
 
-<img src="UPenn_Masterclass_files/figure-markdown_github/unnamed-chunk-18-1.png" style="display: block; margin: auto;" />
+<img src="UPenn_Masterclass_files/figure-markdown_github/unnamed-chunk-20-1.png" style="display: block; margin: auto;" />
 
 ``` r
 #Next we can focus on the colours of the density. Rather than show a raster image we can use filled contors and the scale_fill_contious option
@@ -371,7 +392,7 @@ ggplot() +
   mapTheme()
 ```
 
-<img src="UPenn_Masterclass_files/figure-markdown_github/unnamed-chunk-18-2.png" style="display: block; margin: auto;" />
+<img src="UPenn_Masterclass_files/figure-markdown_github/unnamed-chunk-20-2.png" style="display: block; margin: auto;" />
 
 ``` r
 #Now it's time to use a subtler color for the water with a slight outline
@@ -387,7 +408,7 @@ ggplot() +
   mapTheme()
 ```
 
-<img src="UPenn_Masterclass_files/figure-markdown_github/unnamed-chunk-18-3.png" style="display: block; margin: auto;" />
+<img src="UPenn_Masterclass_files/figure-markdown_github/unnamed-chunk-20-3.png" style="display: block; margin: auto;" />
 
 ``` r
 #Getting there! The road line widths look a bit weird - they can appear as "T" shapes if they are short segments and/or the plot size is small. Tweak the scale_size parameter to minimise this.
@@ -403,7 +424,7 @@ ggplot() +
   mapTheme()
 ```
 
-<img src="UPenn_Masterclass_files/figure-markdown_github/unnamed-chunk-18-4.png" style="display: block; margin: auto;" />
+<img src="UPenn_Masterclass_files/figure-markdown_github/unnamed-chunk-20-4.png" style="display: block; margin: auto;" />
 
 ``` r
 #If the line width isn't working out then the segments could be coloured as well.
@@ -419,7 +440,7 @@ ggplot() +
   mapTheme()
 ```
 
-<img src="UPenn_Masterclass_files/figure-markdown_github/unnamed-chunk-18-5.png" style="display: block; margin: auto;" />
+<img src="UPenn_Masterclass_files/figure-markdown_github/unnamed-chunk-20-5.png" style="display: block; margin: auto;" />
 
 ``` r
 #Finally we can tidy up the plot window and add a title
@@ -435,10 +456,14 @@ ggplot() +
   ylim(1850000,1925000) +
   coord_sf(datum=NA) +
   ggtitle("Bad Drivers in Chicago") +
+  geom_label(aes(x = 1166000,
+                 y = 1850000,
+                 label = "Data Source: data.cityofchicago.org; Created by: James Cheshire"),
+             fill="white") +
   mapTheme()
 ```
 
-<img src="UPenn_Masterclass_files/figure-markdown_github/unnamed-chunk-19-1.png" style="display: block; margin: auto;" />
+<img src="UPenn_Masterclass_files/figure-markdown_github/unnamed-chunk-21-1.png" style="display: block; margin: auto;" />
 
 ``` r
 #Save a pdf of the map to your working directory
@@ -457,3 +482,8 @@ Below are a few datasets that can be used to replicate the above analysis:
 1.  Crash data from 1997 to Current from Pennsylvania Department of Transportation. Available [here](https://data.pa.gov/Public-Safety/Crash-Data-1997-to-Current-Transportation/dc5b-gebx)
 2.  Crashes in Cincinnati, Ohio. Available [here](https://data.cincinnati-oh.gov/Safer-Streets/Traffic-Crash-Reports-CPD-/rvmt-pkmq)
 3.  Traffic crashes from 2011 to 2016 in Detroit. Available [here](https://data.detroitmi.gov/Transportation/Traffic-Crashes/9fph-m2jv)
+
+About the Author
+================
+
+*James Cheshire is an Associate Professor at the UCL Department of Geography. He is co-author of two best-selling books entitled London: The Information Capital and Where the Animals Go.*
