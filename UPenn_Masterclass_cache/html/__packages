@@ -1,0 +1,16 @@
+base
+RSocrata
+ggplot2
+sf
+tidyverse
+tibble
+tidyr
+readr
+purrr
+dplyr
+stringr
+forcats
+RANN
+hexbin
+maps
+mapproj
