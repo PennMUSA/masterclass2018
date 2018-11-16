@@ -49,6 +49,7 @@ If you look at the `head` of the file, you'll see there's a good number of colum
 head(accident_in)
 ```
 
+
 | alignment          | beat_of_occurrence |         crash_date  | crash_date_est_i | crash_day_of_week | crash_hour | crash_month | crash_type             | damage        | date_police_notified | device_condition     | dooring_i | first_crash_type         | hit_and_run_i | injuries_fatal | injuries_incapacitating | injuries_no_indication | injuries_non_incapacitating | injuries_reported_not_evident | injuries_total | injuries_unknown | intersection_related_i | lane_cnt | latitude | lighting_condition     | location                                 | longitude | most_severe_injury      | num_units photos_taken_i | posted_speed_limit | prim_contributory_cause       |
 | ------------------ | ------------------ | ------------------- | ---------------- |------------------ | ---------- | ----------- |----------------------- | ------------- | -------------------- | -------------------- | --------- | ------------------------ | ------------- | -------------- | ----------------------- | ---------------------- | --------------------------- | ----------------------------- | -------------- | ---------------- | ---------------------- | -------- | -------- | ---------------------- | ---------------------------------------- | --------- | ----------------------- | ------------------------ | ------------------ | ----------------------------- |
 | STRAIGHT AND LEVEL |              1033  | 2016-04-16 05:49:00 | 1                | 7                 | 5          | 4           | NO INJURY / DRIVE AWAY |  OVER $1,500   | 2016-04-16 06:30:00  | FUNCTIONING PROPERLY | <NA>      | SIDESWIPE SAME DIRECTION | Y             | 0              | 0                       | 2                      | 0                           | 0                             | 0              | 0                |        Y               | 0        | 41.84473 | DAWN                   | POINT (-87.695363066709 41.844733938666) | -87.69536 | NO INDICATION OF INJURY | 2                        |  30                 | IMPROPER LANE USAGE           |
@@ -197,7 +198,10 @@ bad_drive_sf %>%
   data.frame %>%
   ggplot(aes(X,Y)) +
   geom_point() +
-  mapTheme()
+  theme(axis.text = element_blank(),
+        axis.title = element_blank(),
+        axis.ticks = element_blank(),
+        axis.line = element_blank())
 ```
 
 <img src="UPenn_Masterclass_files/figure-markdown_github/unnamed-chunk-9-1.png" style="display: block; margin: auto;" />
@@ -211,7 +215,10 @@ bad_drive_sf %>%
   ggplot(aes(X,Y)) +
   geom_point() +
   geom_hex() +
-  mapTheme()
+  theme(axis.text = element_blank(),         
+        axis.title = element_blank(),         
+        axis.ticks = element_blank(),         
+        axis.line = element_blank())
 ```
 
 <img src="UPenn_Masterclass_files/figure-markdown_github/unnamed-chunk-10-1.png" style="display: block; margin: auto;" />
@@ -225,7 +232,10 @@ bad_drive_sf %>%
   ggplot(aes(X,Y)) +
   geom_point() +
   geom_density_2d() +
-  mapTheme()
+  theme(axis.text = element_blank(),         
+        axis.title = element_blank(),         
+        axis.ticks = element_blank(),         
+        axis.line = element_blank())
 ```
 
 <img src="UPenn_Masterclass_files/figure-markdown_github/unnamed-chunk-11-1.png" style="display: block; margin: auto;" />
@@ -240,7 +250,10 @@ Density <- bad_drive_sf %>%
   ggplot(aes(X,Y)) +
   stat_density_2d(geom = "raster", aes(fill = stat(density)), contour = FALSE) +
   coord_equal() +
-  mapTheme()
+  theme(axis.text = element_blank(),         
+        axis.title = element_blank(),         
+        axis.ticks = element_blank(),         
+        axis.line = element_blank())
 
 #This has the advantage of being much easier to add further layers to, such as points
 Density + geom_point(size=0.5, color="grey")
@@ -257,7 +270,10 @@ ggplot() +
   stat_density_2d(data=Bad_drive_pts, aes(X, Y, fill = stat(density)),
                   geom = "raster", contour = FALSE) +
   geom_sf(data=Roads, color="red", alpha=0.5) +
-  mapTheme()
+  theme(axis.text = element_blank(),         
+        axis.title = element_blank(),         
+        axis.ticks = element_blank(),         
+        axis.line = element_blank())
 ```
 
 <img src="UPenn_Masterclass_files/figure-markdown_github/unnamed-chunk-13-1.png" style="display: block; margin: auto;" />
@@ -277,7 +293,10 @@ ggplot() +
                   geom = "raster", contour = FALSE) +
   geom_sf(data=Water, color=NA, fill="blue") +
   geom_sf(data=Roads, color="red", alpha=0.5) +
-  mapTheme()
+  theme(axis.text = element_blank(),         
+        axis.title = element_blank(),         
+        axis.ticks = element_blank(),         
+        axis.line = element_blank())
 ```
 
 <img src="UPenn_Masterclass_files/figure-markdown_github/unnamed-chunk-14-1.png" style="display: block; margin: auto;" />
@@ -337,7 +356,10 @@ ggplot(final, aes(X,Y,group=ID, order=Seg,size=Sum)) +
   geom_path() +
   scale_size(range=c(0.2,5)) +
   coord_equal() +
-  mapTheme()
+  theme(axis.text = element_blank(),         
+        axis.title = element_blank(),         
+        axis.ticks = element_blank(),         
+        axis.line = element_blank())
 ```
 
 <img src="UPenn_Masterclass_files/figure-markdown_github/unnamed-chunk-18-1.png" style="display: block; margin: auto;" />
@@ -351,7 +373,10 @@ ggplot() +
   geom_sf(data=Water, color=NA, fill="blue") +
   geom_path(data=final,aes(X,Y,group=ID, size=Sum)) +
   scale_size(range=c(0.2,3)) +
-  mapTheme()
+  theme(axis.text = element_blank(),         
+        axis.title = element_blank(),         
+        axis.ticks = element_blank(),         
+        axis.line = element_blank())
 ```
 
 <img src="UPenn_Masterclass_files/figure-markdown_github/unnamed-chunk-19-1.png" style="display: block; margin: auto;" />
@@ -373,7 +398,10 @@ ggplot() +
   scale_size(range=c(0.2,3)) +
   xlim(1145000,1200000) +
   ylim(1850000,1925000) +
-  mapTheme()
+  theme(axis.text = element_blank(),
+        axis.title = element_blank(),
+        axis.ticks = element_blank(),
+        axis.line = element_blank())
 ```
 
 <img src="UPenn_Masterclass_files/figure-markdown_github/unnamed-chunk-20-1.png" style="display: block; margin: auto;" />
@@ -389,7 +417,10 @@ ggplot() +
   scale_size(range=c(0.2,3)) +
   xlim(1145000,1200000) +
   ylim(1850000,1925000) +
-  mapTheme()
+  theme(axis.text = element_blank(),
+        axis.title = element_blank(),
+        axis.ticks = element_blank(),
+        axis.line = element_blank())
 ```
 
 <img src="UPenn_Masterclass_files/figure-markdown_github/unnamed-chunk-20-2.png" style="display: block; margin: auto;" />
@@ -405,7 +436,10 @@ ggplot() +
   scale_size(range=c(0.2,3)) +
   xlim(1145000,1200000) +
   ylim(1850000,1925000) +
-  mapTheme()
+  theme(axis.text = element_blank(),
+        axis.title = element_blank(),
+        axis.ticks = element_blank(),
+        axis.line = element_blank())
 ```
 
 <img src="UPenn_Masterclass_files/figure-markdown_github/unnamed-chunk-20-3.png" style="display: block; margin: auto;" />
@@ -421,7 +455,10 @@ ggplot() +
   scale_size(range=c(0.2,2)) +
   xlim(1145000,1200000) +
   ylim(1850000,1925000) +
-  mapTheme()
+  theme(axis.text = element_blank(),
+        axis.title = element_blank(),
+        axis.ticks = element_blank(),
+        axis.line = element_blank())
 ```
 
 <img src="UPenn_Masterclass_files/figure-markdown_github/unnamed-chunk-20-4.png" style="display: block; margin: auto;" />
@@ -437,7 +474,10 @@ ggplot() +
   scale_color_continuous(low="black", high="darkorange") +
   xlim(1145000,1200000) +
   ylim(1850000,1925000) +
-  mapTheme()
+  theme(axis.text = element_blank(),
+        axis.title = element_blank(),
+        axis.ticks = element_blank(),
+        axis.line = element_blank())
 ```
 
 <img src="UPenn_Masterclass_files/figure-markdown_github/unnamed-chunk-20-5.png" style="display: block; margin: auto;" />
@@ -460,7 +500,13 @@ ggplot() +
                  y = 1850000,
                  label = "Data Source: data.cityofchicago.org; Created by: James Cheshire"),
              fill="white") +
-  mapTheme()
+  theme(plot.title = element_text(size = 14, family = "sans", face = "plain", hjust = 0),
+    axis.text = element_blank(),
+    axis.title = element_blank(),
+    axis.ticks = element_blank(),
+    axis.line = element_blank(),
+    legend.title = element_text(size = 10, family = "sans"),
+    legend.text = element_text(size = 9, family = "sans"))
 ```
 
 <img src="UPenn_Masterclass_files/figure-markdown_github/unnamed-chunk-21-1.png" style="display: block; margin: auto;" />
